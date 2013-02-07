@@ -10,6 +10,7 @@ class Visit {
 	Date date = new Date()
 	String description
 	Pet pet
+    Vet vet
 
 	static constraints = {
 		description blank:false

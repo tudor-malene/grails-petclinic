@@ -18,8 +18,8 @@ class PetclinicService {
 		pet.save()
 	}
 
-	Visit createVisit(long petId, String description, Date date) {
-		def visit = new Visit(pet: Pet.load(petId), description: description, date: date)
+	Visit createVisit(long petId, String description, Date date, long vetId) {
+		def visit = new Visit(pet: Pet.load(petId), description: description, date: date, vet: Vet.load(vetId))
 		visit.save()
 		visit
 	}

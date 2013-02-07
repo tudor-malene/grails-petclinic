@@ -43,7 +43,7 @@ class PetController {
 			return [visit: new Visit(pet: Pet.get(params.id))]
 		}
 
-		def visit = petclinicService.createVisit((params.visit?.pet?.id ?: 0) as Long, params.visit?.description, params.visit?.date)
+        def visit = petclinicService.createVisit((params.visit?.pet?.id ?: 0) as Long, params.visit?.description, params.visit?.date, params.visit.vet.id as Long)
 		if (visit.hasErrors()) {
 			return [visit: visit]
 		}

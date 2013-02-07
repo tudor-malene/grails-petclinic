@@ -5,9 +5,9 @@ class ViewSourceController {
     def grailsApplication
 
     def controllerAndView(String controllerClass, String viewPath) {
-        renderFiles ([
-            [id:controllerClass, path:"controllers", ext:"groovy"],
-            [id:viewPath, path:"views", ext:"gsp"]
+        renderFiles([
+                [id: controllerClass, path: "controllers", ext: "groovy"],
+                [id: viewPath, path: "views", ext: "gsp"]
         ])
     }
 
@@ -36,22 +36,27 @@ class ViewSourceController {
     }
 
     def save(String sourceCode, String filePath, String controllerName, String actionName, String id) {
-        new File(filePath).text = sourceCode
-        redirect controller: controllerName, action: actionName, id: id
+        if (grailsApplication.config.enableCodeSave) {
+            new File(filePath).text = sourceCode
+            redirect controller: controllerName, action: actionName, id: id
+        } else {
+            flash.message='Not supported'
+            redirect controller: controllerName, action: actionName, id: id
+        }
     }
-        
+
     def renderFiles(args) {
         def model = []
         args.each { fileArgs ->
-            model << createModel(fileArgs.id,fileArgs.path,fileArgs.ext)
+            model << createModel(fileArgs.id, fileArgs.path, fileArgs.ext)
         }
-        render view:'show', model: [files:model]
+        render view: 'show', model: [files: model]
     }
     /**
      *  method to fetch the source and render it with codemirror
      *  in a text editor
-     *  
-     **/
+     *
+     * */
     private createModel(String id, String folder, String ext) {
         boolean isView = ext == "gsp"
         char separatorChar = isView ? ':' : '.'
@@ -59,8 +64,8 @@ class ViewSourceController {
         def idAsPath = id.replace(separatorChar, '/' as char)
         def path = "grails-app/${folder}/${idAsPath}.${ext}"
         def content = getFileContent(path, isView ? 2 : 4)
-        
-          [
+
+        [
                 sourceCode: content,
                 lang: isView ? "text/html" : "groovy",
                 elementId: isView ? "viewEdit" : "controllerEdit",
@@ -69,8 +74,8 @@ class ViewSourceController {
                 controller: params.controllerName,
                 action: params.viewName,
                 id: id
-            ]
-        
+        ]
+
     }
 
     private getFileContent(String path, int spacesForIndent) {

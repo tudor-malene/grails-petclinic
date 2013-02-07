@@ -2,6 +2,7 @@
 	<head>
 		<meta name="layout" content="main">
 		<title>Add Visit</title>
+        <r:require modules="easygrid-selection-dev"/>
 	</head>
 	<body id="addvisit">
 		<h2><g:if test="${!visit.id}">New </g:if>Visit:</h2>
@@ -33,6 +34,16 @@
 					</th>
 					<td>
 						<g:datePicker name="visit.date" value="${visit.date}" precision="day"></g:datePicker>
+					</td>
+				<tr/>
+				<tr>
+					<th>
+						Vet:
+						<br/><span class="errors"><g:fieldError bean="${visit}" field="vet" /></span>
+					</th>
+					<td>
+                        <grid:selection id="vet" title="Select the vet" gridName="vetsGrid" controller="overview" name="visit.vet.id" value="${visit?.vet?.id}"/>
+                        %{--<g:select name="visit.vet.id" from="${org.grails.samples.Vet.all}" value="${visit?.vet?.id}" optionKey="id" optionValue="lastName" />--}%
 					</td>
 				<tr/>
 				<tr>
