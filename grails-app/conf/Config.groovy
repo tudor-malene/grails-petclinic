@@ -73,6 +73,10 @@ easygrid {
 
         gridImpl = 'jqgrid' // the default grid implementation
 
+        // these are properties used by the jqgrid template
+        enableFilter = true
+        addNavGrid = true
+
         //default export settings for various formats
         export {
             exportService = org.grails.plugin.easygrid.EasygridExportService
@@ -133,8 +137,6 @@ easygrid {
         // jqgrid default properties
         // check the jqgrid documentation
         jqgrid {
-            enableFilter = true
-            addNavGrid = true
 //            width = '"100%"'
 //            height = 120
             // number of rows to display by default

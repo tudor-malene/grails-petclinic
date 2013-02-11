@@ -46,8 +46,8 @@
     </g:if>
     });
 
-    <g:if test="${gridConfig.jqgrid.addNavGrid}">
-    jQuery('#${attrs.id}_table').jqGrid('navGrid','#${attrs.id}Pager',
+    <g:if test="${gridConfig.addNavGrid}">
+        jQuery('#${attrs.id}_table').jqGrid('navGrid','#${attrs.id}Pager',
         {
             add: false,
             edit:false,
@@ -56,17 +56,17 @@
             refresh: true
         })
         <g:if test="${gridConfig.addUrl}">
-        .jqGrid('navButtonAdd','#${attrs.id}Pager',{caption:"", buttonicon:"ui-icon-plus", onClickButton:function(){
+            .jqGrid('navButtonAdd','#${attrs.id}Pager',{caption:"", buttonicon:"ui-icon-plus", onClickButton:function(){
             document.location = '${gridConfig.addUrl}';
         }});
         </g:if>
         <g:if test="${gridConfig.addFunction}">
-        .jqGrid('navButtonAdd','#${attrs.id}Pager',{caption:"", buttonicon:"ui-icon-plus", onClickButton:${gridConfig.addFunction}});
+            .jqGrid('navButtonAdd','#${attrs.id}Pager',{caption:"", buttonicon:"ui-icon-plus", onClickButton:${gridConfig.addFunction}});
         </g:if>
     </g:if>
 
-    <g:if test="${gridConfig.jqgrid.enableFilter}">
-    jQuery('#${attrs.id}_table').jqGrid('filterToolbar',
+    <g:if test="${gridConfig.enableFilter}">
+        jQuery('#${attrs.id}_table').jqGrid('filterToolbar',
         {
             autosearch: true,
             searchOnEnter: true
@@ -74,9 +74,9 @@
     </g:if>
 
 
-    %{--test if the current grid has a master grid --}%
+%{--test if the current grid has a master grid --}%
     <g:if test="${gridConfig.masterGrid}">
-        %{--set the on select row of the master grid--}%
+    %{--set the on select row of the master grid--}%
         jQuery('#${gridConfig.masterGrid}_table').setGridParam(
             {
                 "onSelectRow" : function(rowid,status,e){

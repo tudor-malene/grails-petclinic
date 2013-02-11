@@ -42,8 +42,8 @@
 						<br/><span class="errors"><g:fieldError bean="${visit}" field="vet" /></span>
 					</th>
 					<td>
-                        <grid:selection id="vet" title="Select the vet" gridName="vetsGrid" controller="overview" name="visit.vet.id" value="${visit?.vet?.id}"/>
-                        %{--<g:select name="visit.vet.id" from="${org.grails.samples.Vet.all}" value="${visit?.vet?.id}" optionKey="id" optionValue="lastName" />--}%
+                        <grid:selection id="vet" name="visit.vet.id" value="${visit?.vet?.id}"
+                                        gridName="vetsGrid" controller="overview" title="Select the vet" width="650" height="280"/>
 					</td>
 				<tr/>
 				<tr>
