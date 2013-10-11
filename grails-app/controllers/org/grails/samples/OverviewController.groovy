@@ -2,6 +2,7 @@ package org.grails.samples
 
 import org.grails.plugin.easygrid.Easygrid
 import org.grails.plugin.easygrid.Filter
+import java.text.SimpleDateFormat
 
 @Easygrid
 class OverviewController {
@@ -25,6 +26,9 @@ class OverviewController {
                     value { owner ->
                         owner.pets.size()
                     }
+                    jqgrid {
+                        sortable false
+                    }
                 }
             }
         }
@@ -38,12 +42,16 @@ class OverviewController {
             columns {
                 name
                 birthDate {
-                    enableFilter false
+                    enableFilter true
+                    filterClosure { Filter filter ->
+                        eq('birthDate', new SimpleDateFormat('MM/dd/yyyy').parse(filter.paramValue))
+                    }
                 }
                 pettype {
+                    name 'type.name'
                     property 'type.name'
-                    filterClosure{filter ->
-                        type{
+                    filterClosure { filter ->
+                        type {
                             ilike('name', "%${filter.paramValue}%")
                         }
                     }
@@ -61,6 +69,7 @@ class OverviewController {
         visitsGrid {
             dataSourceType 'gorm'
             domainClass Visit
+            inlineEdit false
             globalFilterClosure { params ->
                 eq('pet.id', params.petId ? params.petId as long : -1l)
             }
@@ -69,6 +78,9 @@ class OverviewController {
                     name 'vet'
                     value { Visit visit ->
                         "${visit.vet.firstName} ${visit.vet.lastName}"
+                    }
+                    jqgrid {
+                        editable false
                     }
                     filterClosure { Filter filter ->
                         vet {
@@ -79,8 +91,12 @@ class OverviewController {
                         }
                     }
                 }
-                description
-                date{
+                description    {
+                    jqgrid {
+                        editable false
+                    }
+                }
+                date {
                     enableFilter false
                 }
             }

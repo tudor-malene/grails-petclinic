@@ -25,9 +25,10 @@ grails.project.dependency.resolution = {
     plugins {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.8.0", ":jquery-ui:1.8.24"
-        runtime ":resources:1.1.6"
+        runtime ":resources:1.2"
         build ":tomcat:$grailsVersion"
         compile ":export:1.5"
-        compile ":easygrid:1.3.0"
+        compile ":easygrid:1.4.0"
+        compile ":dynamic-controller:0.4"
     }
 }

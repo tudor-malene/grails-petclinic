@@ -45,7 +45,7 @@ Click on any owner , to see the pets in the grid below. And click on a pet to se
             var elem = jQuery('#'+gridId+'_table').jqGrid('getGridParam', 'selrow');
             console.log(elem);
             if(jQuery.isEmptyObject(elem)){
-                alert("You have to select a '+master+' first");
+                alert("You have to select a "+master+" first");
                 return;
             }
             document.location = lnk+"?"+param+"="+elem;;

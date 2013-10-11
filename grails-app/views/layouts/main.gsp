@@ -20,10 +20,10 @@
 		<header><g:img dir="images" file="banner-graphic.png"/></header>
 
 		<g:if test="${controllerName != 'viewSource'}">
-		<aside>
-			<h2><g:link controller="viewSource" action="controllerAndView"
-			            params="[viewPath:viewPath,controllerClass:controllerClass,viewName:(viewName ?: actionName),controllerName:controllerName]">View/edit source for this page</g:link></h2>
-		</aside>
+		%{--<aside>--}%
+			%{--<h2><g:link controller="viewSource" action="controllerAndView"--}%
+			            %{--params="[viewPath:viewPath,controllerClass:controllerClass,viewName:(viewName ?: actionName),controllerName:controllerName]">View/edit source for this page</g:link></h2>--}%
+		%{--</aside>--}%
 		</g:if>
 
 		<div id="main">
