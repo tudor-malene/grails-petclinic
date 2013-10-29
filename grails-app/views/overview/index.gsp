@@ -9,22 +9,22 @@
 <body id="overview">
 <h2>Owners and pets:</h2>
 Click on any owner , to see the pets in the grid below. And click on a pet to see the vet visits.
-<grid:grid name="ownersGrid" jqgrid.width='600' columns.id.jqgrid.formatter='customShowFormat'
+<grid:grid name="owners" jqgrid.width='600' columns.id.jqgrid.formatter='customShowFormat'
            jqgrid.caption='"Owners"' addUrl="${g.createLink(controller: 'owner',action: 'add')}"/>
-<grid:exportButton name="ownersGrid"/>
+<grid:exportButton name="owners"/>
 <br/>
 <table>
     <tr>
         <td>
-            <grid:grid name="petsGrid" masterGrid="ownersGrid" childParamName="ownerId" jqgrid.width='290'
+            <grid:grid name="pets" masterGrid="owners" childParamName="ownerId" jqgrid.width='290'
                        jqgrid.caption='"Pets"' addFunction="addPet" />
-            <grid:exportButton name="petsGrid" formats="['excel','csv']"/>
+            <grid:exportButton name="pets" formats="['excel','csv']"/>
         </td>
         <td>&nbsp;</td>
         <td>
-            <grid:grid name="visitsGrid" masterGrid="petsGrid" childParamName="petId" jqgrid.width='330'
+            <grid:grid name="visits" masterGrid="pets" childParamName="petId" jqgrid.width='330'
                        jqgrid.caption='"Visits"' addFunction="addVisit" />
-            <grid:exportButton name="visitsGrid" formats="['excel','csv']"/>
+            <grid:exportButton name="visits" formats="['excel','csv']"/>
         </td>
     </tr>
 </table>
@@ -34,14 +34,14 @@ Click on any owner , to see the pets in the grid below. And click on a pet to se
 <r:script>
 
         function addPet(){
-            addElement("${g.createLink(controller: 'pet',action: 'add')}", 'ownersGrid','owner.id', 'owner');
+            addElement("${g.createLink(controller: 'pet',action: 'add')}", 'owners','owner.id', 'owner');
         }
 
         function addVisit(){
-            addElement("${g.createLink(controller: 'pet',action: 'addVisit')}", 'petsGrid', 'id', 'pet');
+            addElement("${g.createLink(controller: 'pet',action: 'addVisit')}", 'pets', 'id', 'pet');
         }
 
-        function addElement(lnk, gridId,param, master){
+        function addElement(lnk, gridId, param, master){
             var elem = jQuery('#'+gridId+'_table').jqGrid('getGridParam', 'selrow');
             console.log(elem);
             if(jQuery.isEmptyObject(elem)){
@@ -58,6 +58,6 @@ Click on any owner , to see the pets in the grid below. And click on a pet to se
 
 </r:script>
 <jq:jquery>
-    console.log(jQuery('#ownersGrid_table').jqGridMethod('setSelection', 1));
+    console.log(jQuery('#owners_table').jqGridMethod('setSelection', 1));
 </jq:jquery>
 </html>

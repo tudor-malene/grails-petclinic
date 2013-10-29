@@ -19,7 +19,6 @@ grails.project.dependency.resolution = {
     }
 
     dependencies {
-        compile('org.mvel:mvel2:2.1.3.Final')
     }
 
     plugins {
@@ -28,7 +27,6 @@ grails.project.dependency.resolution = {
         runtime ":resources:1.2"
         build ":tomcat:$grailsVersion"
         compile ":export:1.5"
-        compile ":easygrid:1.4.0"
-        compile ":dynamic-controller:0.4"
+        compile ":easygrid:1.4.1"
     }
 }

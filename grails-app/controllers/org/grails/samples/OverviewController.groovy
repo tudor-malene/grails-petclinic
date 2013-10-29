@@ -7,141 +7,145 @@ import java.text.SimpleDateFormat
 @Easygrid
 class OverviewController {
 
-    static grids = {
-        ownersGrid {
-            dataSourceType 'gorm'
-            domainClass Owner
-            columns {
-                id {
-                    type 'id'
+    def ownersGrid = {
+        dataSourceType 'gorm'
+        domainClass Owner
+        columns {
+            id {
+                type 'id'
+            }
+            firstName
+            lastName
+            address
+            city
+            telephone
+            nrPets {
+                label 'owner.nrPets.label'
+                enableFilter false
+                value { owner ->
+                    owner.pets.size()
                 }
-                firstName
-                lastName
-                address
-                city
-                telephone
-                nrPets {
-                    label 'owner.nrPets.label'
-                    enableFilter false
-                    value { owner ->
-                        owner.pets.size()
-                    }
-                    jqgrid {
-                        sortable false
-                    }
+                jqgrid {
+                    sortable false
                 }
             }
         }
+    }
 
-        petsGrid {
-            dataSourceType 'gorm'
-            domainClass Pet
-            globalFilterClosure { params ->
-                eq('owner.id', params.ownerId ? params.ownerId as long : -1l)
+    def petsGrid = {
+        dataSourceType 'gorm'
+        domainClass Pet
+        globalFilterClosure { params ->
+            eq('owner.id', params.ownerId ? params.ownerId as long : -1l)
+        }
+        columns {
+            id{
+                jqgrid {
+                    hidden = true
+                }
             }
-            columns {
-                name
-                birthDate {
-                    enableFilter true
-                    filterClosure { Filter filter ->
-                        eq('birthDate', new SimpleDateFormat('MM/dd/yyyy').parse(filter.paramValue))
+            name
+            birthDate {
+                enableFilter true
+                filterClosure { Filter filter ->
+                    eq('birthDate', new SimpleDateFormat('MM/dd/yyyy').parse(filter.paramValue))
+                }
+            }
+            pettype {
+                name 'type.name'
+                property 'type.name'
+                filterClosure { filter ->
+                    type {
+                        ilike('name', "%${filter.paramValue}%")
                     }
                 }
-                pettype {
-                    name 'type.name'
-                    property 'type.name'
-                    filterClosure { filter ->
-                        type {
-                            ilike('name', "%${filter.paramValue}%")
-                        }
-                    }
-                }
-                nrVisits {
-                    label 'pet.nrVisits.label'
-                    enableFilter false
-                    value { Pet pet ->
-                        pet.visits.size()
-                    }
+            }
+            nrVisits {
+                label 'pet.nrVisits.label'
+                enableFilter false
+                value { Pet pet ->
+                    pet.visits.size()
                 }
             }
         }
+    }
 
-        visitsGrid {
-            dataSourceType 'gorm'
-            domainClass Visit
-            inlineEdit false
-            globalFilterClosure { params ->
-                eq('pet.id', params.petId ? params.petId as long : -1l)
-            }
-            columns {
-                vet {
-                    name 'vet'
-                    value { Visit visit ->
-                        "${visit.vet.firstName} ${visit.vet.lastName}"
-                    }
-                    jqgrid {
-                        editable false
-                    }
-                    filterClosure { Filter filter ->
-                        vet {
-                            or {
-                                ilike('firstName', "%${filter.paramValue}%")
-                                ilike('lastName', "%${filter.paramValue}%")
-                            }
+    def visitsGrid = {
+        dataSourceType 'gorm'
+        domainClass Visit
+        inlineEdit false
+        globalFilterClosure { params ->
+            eq('pet.id', params.petId ? params.petId as long : -1l)
+        }
+        columns {
+            vet {
+                name 'vet'
+                value { Visit visit ->
+                    "${visit.vet.firstName} ${visit.vet.lastName}"
+                }
+                jqgrid {
+                    editable false
+                }
+                filterClosure { Filter filter ->
+                    vet {
+                        or {
+                            ilike('firstName', "%${filter.paramValue}%")
+                            ilike('lastName', "%${filter.paramValue}%")
                         }
                     }
                 }
-                description    {
-                    jqgrid {
-                        editable false
-                    }
+            }
+            description {
+                jqgrid {
+                    editable false
                 }
-                date {
-                    enableFilter false
-                }
+            }
+            date {
+                enableFilter false
             }
         }
+    }
 
-        vetsGrid {
-            dataSourceType 'gorm'
-            domainClass Vet
-            columns {
-                firstName
-                lastName
-                specialities {
-                    label 'vet.specialities.label'
-                    name 'specialities'
-                    value { Vet vet ->
-                        vet.specialities.inject('') { val, item -> (val ? "${val}," : "") + item.name }
-                    }
-                    filterClosure { Filter filter ->
-                        specialities {
-                            ilike('name', "%${filter.paramValue}%")
-                        }
-                    }
+    def vetsGrid = {
+        dataSourceType 'gorm'
+        domainClass Vet
+        columns {
+            firstName
+            lastName
+            specialities {
+                label 'vet.specialities.label'
+                name 'specialities'
+                value { Vet vet ->
+                    vet.specialities.inject('') { val, item -> (val ? "${val}," : "") + item.name }
                 }
-                nrOfVisits {
-                    label 'vet.nrOfVisits.label'
-                    name 'nrOfVisits'
-                    value { Vet vet ->
-                        Visit.countByVet(vet)
+                filterClosure { Filter filter ->
+                    specialities {
+                        ilike('name', "%${filter.paramValue}%")
                     }
-                    enableFilter false
                 }
             }
-            autocomplete {
-                labelValue { val, params ->
-                    "${val.firstName} ${val.lastName}"
+            nrOfVisits {
+                label 'vet.nrOfVisits.label'
+                name 'nrOfVisits'
+                value { Vet vet ->
+                    Visit.countByVet(vet)
                 }
-                textBoxFilterClosure { filter ->
-                    or {
-                        ilike('firstName', "%${filter.paramValue}%")
-                        ilike('lastName', "%${filter.paramValue}%")
-                    }
+                enableFilter false
+            }
+        }
+        autocomplete {
+            labelValue { val, params ->
+                "${val.firstName} ${val.lastName}"
+            }
+            textBoxFilterClosure { filter ->
+                or {
+                    ilike('firstName', "%${filter.paramValue}%")
+                    ilike('lastName', "%${filter.paramValue}%")
                 }
             }
         }
     }
 
     def index() {}
+
 }

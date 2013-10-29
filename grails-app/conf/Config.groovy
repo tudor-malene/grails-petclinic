@@ -76,6 +76,7 @@ easygrid {
         // these are properties used by the jqgrid template
         enableFilter = true
         addNavGrid = true
+        idColName = 'id'
 
         //default export settings for various formats
         export {
