@@ -1,0 +1,8 @@
+easygrid{
+
+    defaults{
+        jqgrid{
+
+        }
+    }
+}

@@ -14,6 +14,8 @@ class BootStrap {
             def radiology = new Speciality(name: 'radiology').save(failOnError: true)
             def surgery = new Speciality(name: 'surgery').save(failOnError: true)
             def dentistry = new Speciality(name: 'dentistry').save(failOnError: true)
+            def ophthalmology = new Speciality(name: 'ophthalmology').save(failOnError: true)
+            def pathology = new Speciality(name: 'pathology').save(failOnError: true)
 
             new Vet(firstName: 'James', lastName: 'Carter').save(failOnError: true)
             new Vet(firstName: 'Helen', lastName: 'Leary')
@@ -30,32 +32,112 @@ class BootStrap {
                     .addToSpecialities(radiology)
                     .save(failOnError: true)
             new Vet(firstName: 'Sharon', lastName: 'Jenkins').save(failOnError: true)
+            new Vet(firstName: 'Joe', lastName: 'Smith')
+                    .addToSpecialities(radiology)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Mary', lastName: 'Johnson')
+                    .addToSpecialities(radiology)
+                    .addToSpecialities(pathology)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Patricia', lastName: 'Davis')
+                    .addToSpecialities(pathology)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Barbara', lastName: 'Jones')
+                    .addToSpecialities(ophthalmology)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Robert', lastName: 'Brown')
+                    .addToSpecialities(radiology)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Michael', lastName: 'Miller')
+                    .addToSpecialities(ophthalmology)
+                    .addToSpecialities(surgery)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Thomas', lastName: 'Moore')
+                    .addToSpecialities(radiology)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Joseph', lastName: 'White')
+                    .addToSpecialities(ophthalmology)
+                    .addToSpecialities(surgery)
+                    .save(failOnError: true)
+            new Vet(firstName: 'Christopher', lastName: 'Jackson')
+                    .addToSpecialities(radiology)
+                    .save(failOnError: true)
 
-            for (String type in ['dog', 'lizard', 'cat', 'snake', 'bird', 'hamster']) {
+            for (String type in ['dog', 'lizard', 'cat', 'snake', 'bird', 'hamster', 'fish']) {
                 new PetType(name: type).save(failOnError: true)
             }
 
-            def john = new Owner(firstName: 'John', lastName: 'Johnson', city: 'NY', address: '1st avenue', telephone: '111111').save(failOnError: true)
-            def mary = new Owner(firstName: 'Mary', lastName: 'Doe', city: 'NJ', address: '2nd avenue', telephone: '222222').save(failOnError: true)
-            def joe = new Owner(firstName: 'Joe', lastName: 'Doe', city: 'LA', address: '3rd avenue', telephone: '333333').save(failOnError: true)
+            def firstNames = []
+            def lastNames = []
+            def catNames = []
+            def dogNames = []
+            def cities = []
 
-            def bonkers = new Pet(name: 'Bonkers', type: PetType.findByName('dog'), owner: john, birthDate: new Date(), age:  1).save(failOnError: true)
-            def tommy = new Pet(name: 'tommy', type: PetType.findByName('dog'), owner: john, birthDate: new Date(), age:  2).save(failOnError: true)
-            def pandora = new Pet(name: 'pandora', type: PetType.findByName('cat'), owner: mary, birthDate: new Date(), age:  3).save(failOnError: true)
-            def wanikiy = new Pet(name: 'wanikiy', type: PetType.findByName('bird'), owner: mary, birthDate: new Date(), age:  4).save(failOnError: true)
-            def severin = new Pet(name: 'severin', type: PetType.findByName('hamster'), owner: joe, birthDate: new Date(), age:  5).save(failOnError: true)
-            john.addToPets(bonkers).addToPets(tommy).save()
-            mary.addToPets(pandora).addToPets(wanikiy).save()
-            joe.addToPets(severin).save()
+            def elemAt = { line, at ->
+                line.split('\\t')[at].toLowerCase().capitalize()
+            }
 
-            bonkers.addToVisits(new Visit(description: 'routine', vet: Vet.findByLastName('Douglas'))).save()
-            bonkers.addToVisits(new Visit(description: 'surgery', vet: Vet.findByLastName('Ortega'))).save()
-            bonkers.addToVisits(new Visit(description: 'investigation', vet: Vet.findByLastName('Stevens'))).save()
+            def eachLineFromFile = { file, c ->
+                this.class.getResourceAsStream(file).eachLine(c)
+            }
 
+            eachLineFromFile("first_names.txt"){
+                firstNames << elemAt(it, 0)
+            }
+            eachLineFromFile("last_names.txt"){
+                lastNames << elemAt(it, 0)
+            }
+            eachLineFromFile("cat_names.txt"){
+                catNames << elemAt(it, 1)
+                catNames << elemAt(it, 2)
+            }
+            eachLineFromFile("dog_names.txt"){
+                dogNames << elemAt(it, 1)
+                dogNames << elemAt(it, 2)
+            }
+            eachLineFromFile("cities.txt"){
+                cities << elemAt(it, 0)
+            }
+
+            Random random = new Random()
+            def rndElem = { list ->
+                list[random.nextInt(list.size())]
+            }
+
+            def vets = Vet.list()
+
+            //register 1000 random owners with pets & visits
+            int N = 1000
+            (1..N).each {
+                Owner owner = new Owner(firstName: rndElem(firstNames), lastName: rndElem(firstNames), city: rndElem(cities), address: "some address ${random.nextInt(100)}", telephone: (1..10).collect{random.nextInt(9)}.join('')).save()
+                if (owner) {
+                    (0..(random.nextInt(3))).each {
+                        def dog = new Pet(name: rndElem(dogNames), type: PetType.findByName('dog'), owner: owner, birthDate: new Date() - 365 * random.nextInt(20)).save()
+                        if (!dog) {
+                            return
+                        }
+                        owner.addToPets(dog).save(failOnError: true)
+                        (0..(random.nextInt(4))).each {
+                            dog.addToVisits(new Visit(date: new Date() - random.nextInt(500), description: 'routine', vet: rndElem(vets), pet: dog).save(failOnError: true)).save(failOnError: true)
+                        }
+                    }
+                    (0..(random.nextInt(2))).each {
+                        def cat = new Pet(name: rndElem(catNames), type: PetType.findByName('cat'), owner: owner, birthDate: new Date() - 365 * random.nextInt(15)).save()
+                        if (!cat) {
+                            return
+                        }
+                        owner.addToPets(cat).save(failOnError: true)
+                        (0..(random.nextInt(3))).each {
+                            cat.addToVisits(new Visit(date: new Date() - random.nextInt(500), description: 'routine', vet: rndElem(vets), pet: cat).save(failOnError: true)).save(failOnError: true)
+                        }
+                    }
+
+                }
+            }
         }
 
         NamedCriteriaProxy.metaClass.toDetachedCriteria = {
-            def ncp =  delegate
+            def ncp = delegate
             new DetachedCriteria(ncp.domainClass.clazz).build {
                 ncp.queryBuilder = delegate
                 ncp.invokeCriteriaClosure()

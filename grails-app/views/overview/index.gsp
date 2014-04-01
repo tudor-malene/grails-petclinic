@@ -8,37 +8,38 @@
 
 <body id="overview">
 <h2>Owners and pets:</h2>
-Click on any owner , to see the pets in the grid below. And click on a pet to see the vet visits.
-<grid:grid name="owners" jqgrid.width='600' columns.id.jqgrid.formatter='customShowFormat'
-           jqgrid.caption='"Owners"' addUrl="${g.createLink(controller: 'owner',action: 'add')}"/>
+<b>Click on any owner to see the pets in the grid below. And click on a pet to see the vet visits.</b>
+<br/>
+You can filter using the operators in the toolbar or play with the multi-clause filtering
+<br/>
+<grid:grid name="owners" addUrl="${g.createLink(controller: 'owner', action: 'add')}">
+    <grid:set caption="Owners" width="800"/>
+    <grid:set col="id" formatter="f:customShowFormat" />
+    <grid:set col="nrPets" width="60" />
+</grid:grid>
 <grid:exportButton name="owners"/>
 <br/>
-<table>
-    <tr>
-        <td>
-            <grid:grid name="pets" masterGrid="owners" childParamName="ownerId" jqgrid.width='290'
-                       jqgrid.caption='"Pets"' addFunction="addPet" />
-            <grid:exportButton name="pets" formats="['excel','csv']"/>
-        </td>
-        <td>&nbsp;</td>
-        <td>
-            <grid:grid name="visits" masterGrid="pets" childParamName="petId" jqgrid.width='330'
-                       jqgrid.caption='"Visits"' addFunction="addVisit" />
-            <grid:exportButton name="visits" formats="['excel','csv']"/>
-        </td>
-    </tr>
-</table>
+<grid:grid name="pets" masterGrid="owners" childParamName="ownerId" addFunction="addPet">
+    <grid:set caption="Pets" width="600" height="140"/>
+    <grid:set col="nrVisits" width="60" />
+</grid:grid>
+<grid:exportButton name="pets" formats="['excel', 'csv']"/>
+<br/>
+<grid:grid name="visits" masterGrid="pets" childParamName="petId" addFunction="addVisit">
+    <grid:set caption="Visits" width="800"/>
+</grid:grid>
+<grid:exportButton name="visits" formats="['excel', 'csv']"/>
 
 </body>
 
 <r:script>
 
         function addPet(){
-            addElement("${g.createLink(controller: 'pet',action: 'add')}", 'owners','owner.id', 'owner');
+            addElement("${g.createLink(controller: 'pet', action: 'add')}", 'owners','owner.id', 'owner');
         }
 
         function addVisit(){
-            addElement("${g.createLink(controller: 'pet',action: 'addVisit')}", 'pets', 'id', 'pet');
+            addElement("${g.createLink(controller: 'pet', action: 'addVisit')}", 'pets', 'id', 'pet');
         }
 
         function addElement(lnk, gridId, param, master){

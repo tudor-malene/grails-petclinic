@@ -2,17 +2,18 @@ package org.grails.samples
 
 import org.grails.plugin.easygrid.Easygrid
 import org.grails.plugin.easygrid.Filter
-import java.text.SimpleDateFormat
+
+import static org.grails.plugin.easygrid.GormUtils.applyFilter
 
 @Easygrid
 class OverviewController {
 
     def ownersGrid = {
-        dataSourceType 'gorm'
         domainClass Owner
         columns {
             id {
                 type 'id'
+                enableFilter false
             }
             firstName
             lastName
@@ -20,7 +21,6 @@ class OverviewController {
             city
             telephone
             nrPets {
-                label 'owner.nrPets.label'
                 enableFilter false
                 value { owner ->
                     owner.pets.size()
@@ -33,35 +33,21 @@ class OverviewController {
     }
 
     def petsGrid = {
-        dataSourceType 'gorm'
         domainClass Pet
         globalFilterClosure { params ->
+            //link to the owner provided by the master table
             eq('owner.id', params.ownerId ? params.ownerId as long : -1l)
         }
         columns {
-            id{
-                jqgrid {
-                    hidden = true
-                }
+            id {
+                type 'id'
+                enableFilter false
             }
             name
-            birthDate {
-                enableFilter true
-                filterClosure { Filter filter ->
-                    eq('birthDate', new SimpleDateFormat('MM/dd/yyyy').parse(filter.paramValue))
-                }
-            }
-            pettype {
-                name 'type.name'
-                property 'type.name'
-                filterClosure { filter ->
-                    type {
-                        ilike('name', "%${filter.paramValue}%")
-                    }
-                }
+            birthDate
+            'type.name' {
             }
             nrVisits {
-                label 'pet.nrVisits.label'
                 enableFilter false
                 value { Pet pet ->
                     pet.visits.size()
@@ -71,7 +57,6 @@ class OverviewController {
     }
 
     def visitsGrid = {
-        dataSourceType 'gorm'
         domainClass Visit
         inlineEdit false
         globalFilterClosure { params ->
@@ -79,7 +64,6 @@ class OverviewController {
         }
         columns {
             vet {
-                name 'vet'
                 value { Visit visit ->
                     "${visit.vet.firstName} ${visit.vet.lastName}"
                 }
@@ -89,63 +73,24 @@ class OverviewController {
                 filterClosure { Filter filter ->
                     vet {
                         or {
-                            ilike('firstName', "%${filter.paramValue}%")
-                            ilike('lastName', "%${filter.paramValue}%")
+                            applyFilter(delegate, filter.operator, 'firstName', filter.value)
+                            applyFilter(delegate, filter.operator, 'lastName', filter.value)
                         }
                     }
                 }
-            }
-            description {
-                jqgrid {
-                    editable false
+                sortClosure { sortOrder ->
+                    order('vet.lastName', sortOrder)
+                    order('vet.firstName', sortOrder)
                 }
             }
-            date {
-                enableFilter false
-            }
+            description
+            date
         }
     }
 
-    def vetsGrid = {
-        dataSourceType 'gorm'
-        domainClass Vet
-        columns {
-            firstName
-            lastName
-            specialities {
-                label 'vet.specialities.label'
-                name 'specialities'
-                value { Vet vet ->
-                    vet.specialities.inject('') { val, item -> (val ? "${val}," : "") + item.name }
-                }
-                filterClosure { Filter filter ->
-                    specialities {
-                        ilike('name', "%${filter.paramValue}%")
-                    }
-                }
-            }
-            nrOfVisits {
-                label 'vet.nrOfVisits.label'
-                name 'nrOfVisits'
-                value { Vet vet ->
-                    Visit.countByVet(vet)
-                }
-                enableFilter false
-            }
-        }
-        autocomplete {
-            labelValue { val, params ->
-                "${val.firstName} ${val.lastName}"
-            }
-            textBoxFilterClosure { filter ->
-                or {
-                    ilike('firstName', "%${filter.paramValue}%")
-                    ilike('lastName', "%${filter.paramValue}%")
-                }
-            }
-        }
+
+    def index() {
     }
 
-    def index() {}
 
 }

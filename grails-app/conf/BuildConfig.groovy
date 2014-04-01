@@ -3,7 +3,7 @@ grails.project.work.dir = "target/$grailsVersion"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 
-//grails.plugin.location.easygrid ="../Easygrid"
+grails.plugin.location.easygrid ="../Easygrid"
 grails.project.dependency.resolution = {
 
     inherits "global"
@@ -22,11 +22,14 @@ grails.project.dependency.resolution = {
     }
 
     plugins {
-        runtime ":hibernate:$grailsVersion"
-        runtime ":jquery:1.8.0", ":jquery-ui:1.8.24"
-        runtime ":resources:1.2"
-        build ":tomcat:$grailsVersion"
+        runtime':hibernate:3.6.10.10'
+        build ":tomcat:7.0.50.1"
+
+        compile ":jquery-ui:1.10.3"
+        runtime ":jquery:1.10.2.2"
+//        compile ":easygrid:1.5.0"
+
+        runtime ":resources:1.2.7"
         compile ":export:1.5"
-        compile ":easygrid:1.4.1"
     }
 }

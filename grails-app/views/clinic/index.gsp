@@ -8,10 +8,9 @@
 		<h2><g:message code="welcome"/></h2>
 
 		<ul>
-			<li><g:link controller="overview" >Overview</g:link></li>
-			<li><g:link controller="owner" action="find">Find owner</g:link></li>
-			<li><g:link action="vets">Display all veterinarians</g:link></li>
-			<li><g:link action="tutorial">Tutorial</g:link></li>
+			<li><g:link controller="overview" >Easygrid Overview ( Master-Detail grids)</g:link></li>
+			<li><g:link controller="vetSchedule" >Vet Schedule ( Grid + Subgrids)</g:link></li>
+			<li><g:link controller="vetSchedule" action="overview">Visits report ( Complex query )</g:link></li>
 		</ul>
 	</body>
 </html>
