@@ -12,6 +12,11 @@
 <br/>
 You can filter using the operators in the toolbar or play with the multi-clause filtering
 <br/>
+Source code:
+<a href="https://github.com/tudor-malene/grails-petclinic/blob/master/grails-app/controllers/org/grails/samples/OverviewController.groovy">Controller</a>
+<br/>
+<a href="https://github.com/tudor-malene/grails-petclinic/blob/master/grails-app/views/overview/index.gsp">GSP</a>
+<br/>
 <grid:grid name="owners" addUrl="${g.createLink(controller: 'owner', action: 'add')}">
     <grid:set caption="Owners" width="800"/>
     <grid:set col="id" formatter="f:customShowFormat" />

@@ -43,7 +43,7 @@
 					</th>
 					<td>
                         <grid:selection id="vet" name="visit.vet.id" value="${visit?.vet?.id}"
-                                        gridName="vets" controller="vetSchedule" title="Select the vet" width="650" height="280" autocompleteSize="20"/>
+                                        gridName="vets" controller="vetSchedule" title="Select the vet" width="700" height="380" autocompleteSize="20"/>
 					</td>
 				<tr/>
 				<tr>

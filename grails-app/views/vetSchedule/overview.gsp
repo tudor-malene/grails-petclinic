@@ -9,6 +9,12 @@
 
 <body id="pets">
 <h2>Report that shows how many visits each Vet has had in a period of time (can be grouped by pet type too)</h2>
+<br/>
+Source code:
+<a href="https://github.com/tudor-malene/grails-petclinic/blob/master/grails-app/controllers/org/grails/samples/VetScheduleController.groovy">Controller</a>
+<br/>
+<a href="https://github.com/tudor-malene/grails-petclinic/blob/master/grails-app/views/vetSchedule/overview.gsp">GSP</a>
+<br/>
 
 <grid:grid name="visitsOverview">
     <grid:set width="800" height="250"/>

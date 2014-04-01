@@ -11,6 +11,7 @@
 			<li><g:link controller="overview" >Easygrid Overview ( Master-Detail grids)</g:link></li>
 			<li><g:link controller="vetSchedule" >Vet Schedule ( Grid + Subgrids)</g:link></li>
 			<li><g:link controller="vetSchedule" action="overview">Visits report ( Complex query )</g:link></li>
+			<li><g:link controller="pet" action="addVisit" params="[id:1]">Add Visit ( selection widget) </g:link></li>
 		</ul>
 	</body>
 </html>
