@@ -3,7 +3,7 @@ grails.project.work.dir = "target/$grailsVersion"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 
-grails.plugin.location.easygrid ="../Easygrid"
+//grails.plugin.location.easygrid ="../Easygrid"
 grails.project.dependency.resolution = {
 
     inherits "global"
@@ -16,6 +16,7 @@ grails.project.dependency.resolution = {
         grailsPlugins()
         grailsHome()
         grailsCentral()
+        mavenCentral()
     }
 
     dependencies {
@@ -31,5 +32,7 @@ grails.project.dependency.resolution = {
 
         runtime ":resources:1.2.7"
         compile ":export:1.5"
+
+        compile ":easygrid:1.5.0"
     }
 }
